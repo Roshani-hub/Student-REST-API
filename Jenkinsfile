@@ -14,27 +14,35 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies'
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Testing the REST API application'
-                sh 'npm test'
+                echo 'Testing REST API application'
+                bat 'npm test'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the application'
-                sh 'npm run build'
+                echo 'Building REST API application'
+
+                bat 'if not exist dist mkdir dist'
+
+                bat 'copy server.js dist\\server.js'
+
+                bat 'copy package.json dist\\package.json'
+
+                bat 'copy package-lock.json dist\\package-lock.json'
             }
         }
 
         stage('Archive Artifacts') {
             steps {
                 echo 'Archiving generated artifacts'
+
                 archiveArtifacts artifacts: 'dist/**',
                                  fingerprint: true
             }
